@@ -12,6 +12,7 @@ Here is a method to detect malicious traffic (hackers' attack). We made use of M
 <center>Figure 1. Flow Chart of Encrypted Traffic Anaylsis</center>
 
 
+
 Having finished our data collection, we started to process data and built a model.
 
 1. Process data: We just simply filled na with 0 and replaced inf to 1E6.
