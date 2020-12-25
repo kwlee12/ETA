@@ -1,11 +1,37 @@
 # Encrypted Traffic Analysis
 
-## Prerequest
+## Introduction
 
-An `Python3` environment. If you want to run it on docker, recommand using `python:3.8.5-buster`(gcc is needed).
+In recent year, the encrypted technique is popular that people can use it to protect their privacy in network environment. For example, SSL/TLS is a famous cryptographic protocols designed to provide communications security over a computer network. Websites can use TLS to secure all communications between their servers and web browsers.
 
-## Install library with pip
-You can use `pip3 install` to install packages below
+However, Hackers also benefit from it. They hid their behaviors and kept infiltrating companies which lacked knowledge around cybersecurity. Network administrators were hard to deal with malicious traffic and sensitive data exfiltration in an encrypted format.
+
+Here is a method to detect malicious traffic (hackers' attack). We made use of Machine Learning to analyze traffic and classified it to benign or malware. The Figure 1. is our flow chart. We will collect benign/malware data in first. These data can be got from pcap file with a tool named [CICFlowMeter](https://github.com/ahlashkari/CICFlowMeter). This tool can be used in linux or windows operating systems, and a part of data schema from CICFlowMeter can refer to the Input Schema in Usage Section.
+
+<img src="./data/flowchart.png" width="800px" />  
+<center>Figure 1. Flow Chart of Encrypted Traffic Anaylsis</center>
+
+Having finished our data collection, we started to process data and built a model.
+
+1. Process data: We just simply filled na with 0 and replaced inf to 1E6.
+
+2. Build a model:
+
+   We selected XGBoost which is famous in GBDT as our model. To avoid overfittng, "Stratified K Fold Cross Validation" is used in modeling. The parameter optimization was implied by "Grid Search" and "Stratified K Fold Cross Validation". We choosed the best parameters from all 54 (3 kinds of learning_rate, 3 kinds of max_depth, and 6 kinds of n_estimators; parameters can be adjusted in need) combinations of parameters. Then an initial model will be fitted with the best parameters, and we filter out useless features by feature importance of the initial model. Finally, we got a best model with important features and best parameters.
+
+In our experiment, the model is a multiclass model, which can classify traffic to one of 11 classes (Dridex, EITest, Emotet, HTBot, Hancitor, Nuclear, Razy, Rig, TrickBot, Benign, and wannacry). In addition, the macro precision and macro recall are 98.57% and 95.45%, respectively. 
+
+Encrypted Traffic Analysis is an interesting theme, we can observe different behaviors of malware. Most importantly, it can timely detect malicious behaviors, and help MIS quickly find the malicious event. This project supplied an example code, hoping anyone interested join us to develop this technique.
+
+
+## Usage
+
+### Prerequest
+
+An `Python3` environment. If you want to run it on docker, `python:3.8.5-buster`(gcc is needed) is recommended.
+
+### Install library with pip
+You can use `pip3 install` to install packages below, or you can use `pip3 install -r requirements.txt` to finish it.
 
 - xgboost==1.2.0
 - scikit-learn==0.23.2
@@ -14,23 +40,23 @@ You can use `pip3 install` to install packages below
 - Flask==1.1.2
 - elasticsearch==7.9.1
 
-or you can use `pip3 install -r requirements.txt`
+### Run Code
 
-## Run Code
+Programs can be divided to training phase and application phase. In first time, you need to run `training.py` before `predicting.py`, and the input data can refer to 'Inupt Schema'.
 
-### Training Phase
+#### Training Phase
 
 ```
 python3 training.py -f PATH/file.csv
 ```
 
-### Application Phase
+#### Application Phase
 
 ```
 python3 predicting.py -f PATH/file.csv
 ```
 
-## Input Schema
+### Input Schema
 
 Key                            | Value
 -------------------------------|---------------
@@ -82,7 +108,7 @@ byte_1                         | 0
 byte_255                       | 0
 
 
-## Output Schema
+### Output Schema
 
 Key                 | Value
 --------------------|---------------
