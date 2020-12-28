@@ -11,8 +11,6 @@ Here is a method to detect malicious traffic (hackers' attack). We made use of M
 <img src="./data/flowchart.png" width="800px" />  
 <center>Figure 1. Flow Chart of Encrypted Traffic Anaylsis</center>
 
-
-
 Having finished our data collection, we started to process data and built a model.
 
 1. Process data: We just simply filled na with 0 and replaced inf to 1E6.
@@ -30,7 +28,7 @@ Encrypted Traffic Analysis is an interesting theme, we can observe different beh
 
 ### Prerequest
 
-An `Python3` environment. If you want to run it on docker, `python:3.8.5-buster`(gcc is needed) is recommended.
+An `Python3` environment is needed. If you want to run it on docker, `python:3.8.5-buster`(gcc is needed) is recommended.
 
 ### Install library with pip
 You can use `pip3 install` to install packages below, or you can use `pip3 install -r requirements.txt` to finish it.
@@ -44,9 +42,13 @@ You can use `pip3 install` to install packages below, or you can use `pip3 insta
 
 ### Run Code
 
-Programs can be divided to training phase and application phase. In first time, you need to run `training.py` before `predicting.py`, and the input data can refer to 'Inupt Schema'.
+Programs can be divided to training phase and application phase. You must run `training.py` before `predicting.py`, because malware detection is based on the model that was trained with input data.
 
 #### Training Phase
+
+There is a parameter, `-f`, which means the input data for training model. `PATH` is the file path, and `file.csv` is the file with csv format. The input data schema can be referred to the section "Input Schema".
+
+After running this code, you will get a folder named "model" (can be changed filename in config.ini). The folder contained 5 models (the numbers is alse decided in config.ini) and one text file which recorded the important features. 
 
 ```
 python3 training.py -f PATH/file.csv
@@ -54,11 +56,17 @@ python3 training.py -f PATH/file.csv
 
 #### Application Phase
 
+Similarly, the parameter in application phase is like training phase. The input data schema can be referred to the section "Input Schema".
+
+The output is a JSON file, which only recorded the warning netowrk traffic. The content of the warning message can be referred to the section "Output Schema".
+
 ```
 python3 predicting.py -f PATH/file.csv
 ```
 
 ### Input Schema
+
+There are the features for detecting malicious network traffic. Here we showed 4 types of statistics: Network Identifiers, Flow Descriptors, Interarrival Times, and Payload Byte Distribution (Total number is 298).
 
 Key                            | Value
 -------------------------------|---------------
@@ -111,6 +119,8 @@ byte_255                       | 0
 
 
 ### Output Schema
+
+Here we showed the information of the applicaiotn phase. We would add another information in the future.
 
 Key                 | Value
 --------------------|---------------
