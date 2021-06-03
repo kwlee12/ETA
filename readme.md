@@ -1,7 +1,5 @@
 # Encrypted Traffic Analysis
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kwlee12/ETA/main)
-
 ## Introduction
 
 In recent year, the encrypted technique is popular that people can use it to protect their privacy in network environment. For example, SSL/TLS is a famous cryptographic protocols designed to provide communications security over a computer network. Websites can use TLS to secure all communications between their servers and web browsers.
